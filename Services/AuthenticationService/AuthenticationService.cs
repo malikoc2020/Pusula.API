@@ -38,8 +38,10 @@ namespace Services.AuthenticationService
             var users = await _userRepository.GetAllAsQueryable().Where(x=>x.Email== loginRequest.LoginName || x.PhoneNumber== loginRequest.LoginName).ToListAsync();
             if (users is null || users.Count==0)
             {
-                throw new Exception();//can not found
-            }else if(users.Count==1)
+                //throw new Exception();//can not found
+                return new BaseResponse(false, "Lütfen kullanıcı adınızı kontrol edip tekrar deneyiniz.", null);
+            }
+            else if(users.Count==1)
             {
                 var user = users.FirstOrDefault();
                 var userPasswordGenerateDTO = new UserPasswordGenerateDTO(user.Name,user.SurName,user.Email,user.PhoneNumber);
