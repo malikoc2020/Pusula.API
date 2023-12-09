@@ -26,6 +26,10 @@ namespace DAL.Repository
         {
             return await _dbSet.FindAsync(id);
         }
+        public async Task<T> GetByIdAsync(string id)
+        {
+            return await _dbSet.FindAsync(id);
+        }
 
         public async Task AddAsync(T entity)
         {

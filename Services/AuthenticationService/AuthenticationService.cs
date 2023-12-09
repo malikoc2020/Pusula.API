@@ -22,36 +22,41 @@ namespace Services.AuthenticationService
     {
         private readonly ILogger<AuthenticationService> _logger;
         private readonly IConfiguration _configuration;
-        private readonly IRepository<User> _userRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        //private readonly IRepository<User> _userRepository;
+        //private readonly IUnitOfWork _unitOfWork;
+        private readonly RoleManager<Role> _roleManager;
+        private readonly UserManager<User> _userManager;
 
-        public AuthenticationService(ILogger<AuthenticationService> logger, IUnitOfWork unitOfWork, IConfiguration configuration)
+        public AuthenticationService(ILogger<AuthenticationService> logger/*, IUnitOfWork unitOfWork*/, IConfiguration configuration, RoleManager<Role> roleManager, UserManager<User> userManager)
         {
             _logger = logger;
             _configuration = configuration;
-            _unitOfWork = unitOfWork;
-            _userRepository = _unitOfWork.GetRepository<User>();
+            //_unitOfWork = unitOfWork;
+            //_userRepository = _unitOfWork.GetRepository<User>();
+            _roleManager = roleManager;
+            _userManager = userManager;
         }
 
         public async Task<BaseResponse> Login(LoginRequest loginRequest)
         {
-            var users = await _userRepository.GetAllAsQueryable().Where(x=>x.Email== loginRequest.LoginName || x.PhoneNumber== loginRequest.LoginName).ToListAsync();
-            if (users is null || users.Count==0)
+            //var users = await _userRepository.GetAllAsQueryable().Where(x=>x.Email== loginRequest.LoginName || x.PhoneNumber== loginRequest.LoginName).ToListAsync();
+            var user = await _userManager.FindByNameAsync(loginRequest.LoginName);
+            if (user is null)
             {
                 //throw new Exception();//can not found
                 return new BaseResponse(false, "Lütfen kullanıcı adınızı kontrol edip tekrar deneyiniz.", null);
             }
-            else if(users.Count==1)
+            else if(await _userManager.CheckPasswordAsync(user, loginRequest.Password))
             {
-                var user = users.FirstOrDefault();
-                var userPasswordGenerateDTO = new UserPasswordGenerateDTO(user.Name,user.SurName,user.Email,user.PhoneNumber);
-                var passwordHasher = new PasswordHasher<UserPasswordGenerateDTO>();
+                //var user = users.FirstOrDefault();
+                //var userPasswordGenerateDTO = new UserPasswordGenerateDTO(user.Name,user.SurName,user.Email,user.PhoneNumber);
+                //var passwordHasher = new PasswordHasher<UserPasswordGenerateDTO>();
                 //var passwordHash = passwordHasher.HashPassword(userPasswordGenerateDTO, loginRequest.Password);
                 //if (passwordHash==user.PasswordHash)
-                var result = passwordHasher.VerifyHashedPassword(userPasswordGenerateDTO,user.PasswordHash, loginRequest.Password);
+                //var result = passwordHasher.VerifyHashedPassword(userPasswordGenerateDTO,user.PasswordHash, loginRequest.Password);
 
-                if (result == PasswordVerificationResult.Success)
-                {
+                //if (result == PasswordVerificationResult.Success)
+                //{
                     var jwtToken = GenerateJwtToken(user);
                     var userDTO = new UserDTO()
                     {
@@ -71,26 +76,27 @@ namespace Services.AuthenticationService
                         Token = jwtToken
                     };
                     return new BaseResponse(true,"", userDTO);
-                }
-                else
-                {
-                    return new BaseResponse(false,"Hatalı Şifre",null);
-                }
+                //}
+                //else
+                //{
+                //    return new BaseResponse(false,"Hatalı Şifre",null);
+                //}
             }
             else
             {
-                _logger.LogWarning($"{nameof(Login)} ErrorCode=E0001 loginRequest={loginRequest.ToJson()}");
-                return new BaseResponse(false, "Girilen Bilgilerle İlgili Sistemde Beklenmedik Hata Oluştuğu Tespit Edilmiştir. Lütfen Hesabınızla ilgili sistem yöneticinizle iletişime geçiniz. Hata Kodu:E0001", null);
+                //_logger.LogWarning($"{nameof(Login)} ErrorCode=E0001 loginRequest={loginRequest.ToJson()}");
+                //return new BaseResponse(false, "Girilen Bilgilerle İlgili Sistemde Beklenmedik Hata Oluştuğu Tespit Edilmiştir. Lütfen Hesabınızla ilgili sistem yöneticinizle iletişime geçiniz. Hata Kodu:E0001", null);
+                return new BaseResponse(false, "Hatalı Şifre", null);
             }
         }
 
         public async Task<BaseResponse> Register(RegisterRequest registerRequest)
         {
-            var userDTO = new UserPasswordGenerateDTO(registerRequest.Name, registerRequest.SurName, registerRequest.Email, registerRequest.PhoneNumber);
-            var passwordHasher = new PasswordHasher<UserPasswordGenerateDTO>();
+            //var userDTO = new UserPasswordGenerateDTO(registerRequest.Name, registerRequest.SurName, registerRequest.Email, registerRequest.PhoneNumber);
+            //var passwordHasher = new PasswordHasher<UserPasswordGenerateDTO>();
             //Random random = new Random();
-            var password = registerRequest.Password;//random.Next(100000, 999999);
-            var passwordHash = passwordHasher.HashPassword(userDTO, password);
+            //var password = registerRequest.Password;//random.Next(100000, 999999);
+            //var passwordHash = passwordHasher.HashPassword(userDTO, password);
 
             var newUser = new User()
             {
@@ -98,9 +104,10 @@ namespace Services.AuthenticationService
                 SurName = registerRequest.SurName,
                 Email = registerRequest.Email,
                 EmailConfirmed = false,
+                UserName = registerRequest.Email,
                 PhoneNumber = registerRequest.PhoneNumber,
                 PhoneNumberConfirmed = false,
-                PasswordHash= passwordHash,
+                //PasswordHash= passwordHash,
                 SecurityStamp = "",
                 ConcurrencyStamp = "",
                 TwoFactorEnabled = false,
@@ -115,13 +122,38 @@ namespace Services.AuthenticationService
 
             try
             {
-                await _userRepository.AddAsync(newUser);
-                await _unitOfWork.CommitAsync();
-                return new BaseResponse(true, "Kayıt İşlemi Başarılı. Email/Telefon ile giriş yapınız.", null);
+                //return new BaseResponse(false, "Kayıt İşlemi BAŞARISIZ. Email adresiniz ile giriş yapabilirsiniz.", null);
+
+                //await _userRepository.AddAsync(newUser);
+                //await _unitOfWork.CommitAsync();
+                //var res = await _userManager.CreateAsync(newUser, registerRequest.Password);
+                var res = await _userManager.CreateAsync(newUser);
+                if (res.Succeeded)
+                {
+                    // this line of code bypasses the password validation
+                    newUser.PasswordHash = _userManager.PasswordHasher.HashPassword(newUser, registerRequest.Password);
+
+                    // update the user object with the hashed password
+                    var resPassUpdate = await _userManager.UpdateAsync(newUser);
+                    if (resPassUpdate.Succeeded)
+                    {
+                        return new BaseResponse(res.Succeeded, "Kayıt İşlemi Başarılı. Email adresiniz ile giriş yapabilirsiniz.", null);
+                    }
+                    else
+                    {
+                        _logger.LogWarning($"{nameof(Login)} ErrorCode=E0001 loginRequest={registerRequest.ToJson()}");
+                        return new BaseResponse(false, "Kayıt İşlemi Başarılı. Ancak Şifrenizle İlgili Sistemde Beklenmedik Hata Oluştuğu Tespit Edilmiştir. Lütfen Hesabınızla ilgili sistem yöneticinizle iletişime geçiniz. Hata Kodu:E0001", null);
+                    }
+                }
+                else
+                {
+                    _logger.LogWarning($"{nameof(Register)} ErrorCode=E0002 registerRequest={registerRequest.ToJson()}");
+                    return new BaseResponse(res.Succeeded, "Kayıt İşlemi BARAŞIRIZ. Lütfen tekrar deneyiniz. Hata Kodu:E0003", res.Errors);
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogWarning($"{nameof(Register)} ErrorCode=E0002 registerRequest={registerRequest.ToJson()} Error:{ex.Message}");
+                _logger.LogWarning($"{nameof(Register)} ErrorCode=E0003 registerRequest={registerRequest.ToJson()} Error:{ex.Message}");
                 return new BaseResponse(false, "Kayıt İşlemi Başarısız. Lütfen tekrar deneyiniz. Hata Kodu:E0002", null);
             }
         }
@@ -130,9 +162,9 @@ namespace Services.AuthenticationService
         {
             var claims = new List<Claim>
                                         {
-                                            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                                            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                                             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                                            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                                            new Claim(JwtRegisteredClaimNames.Email, user.Email)
                                         };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -142,7 +174,7 @@ namespace Services.AuthenticationService
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(30),
+                expires: DateTime.UtcNow.AddMinutes(1),
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

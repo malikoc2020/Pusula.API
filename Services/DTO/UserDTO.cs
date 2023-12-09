@@ -2,7 +2,7 @@
 {
     public class UserDTO
     {
-        public int Id { get; set; }
+        public string Id { get; set; } = "";
         public string Name { get; set; } = "";
         public string SurName { get; set; } = "";
         public string? Email { get; set; } = "";
@@ -12,7 +12,7 @@
         public string? SecurityStamp { get; set; } = "";
         public string? ConcurrencyStamp { get; set; } = "";
         public bool? TwoFactorEnabled { get; set; } = false;
-        public DateTime? LockoutEnd { get; set; }
+        public DateTimeOffset? LockoutEnd { get; set; }
         public bool? LockoutEnabled { get; set; } = false;
         public int? AccessFailedCount { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;

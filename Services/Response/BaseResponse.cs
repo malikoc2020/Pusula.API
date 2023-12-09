@@ -6,14 +6,14 @@
         {
             IsSuccess = true;
         }
-        public BaseResponse(bool IsSuccess, string ErrorMessage, object? Result)
+        public BaseResponse(bool IsSuccess, string Message, object? Result)
         {
             this.IsSuccess = IsSuccess;
-            this.ErrorMessage = ErrorMessage;
+            this.Message = Message;
             this.Result = Result;
         }
         public bool IsSuccess { get; set; }
-        public string ErrorMessage { get; set; } = "";
+        public string Message { get; set; } = "";
         public object? Result { get; set; }
     }
 }

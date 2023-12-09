@@ -1,7 +1,10 @@
 using DAL.Context;
 using DAL.Repository;
+using DAL.Seed;
 using DAL.UnitOfWork;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Services.AuthenticationService;
@@ -41,6 +44,9 @@ builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(builder.Configuration.GetConnectionString("MySqlConnectionString")
                                                                                 ,serverVersion: new MySqlServerVersion(new Version(8, 0, 35))));
+builder.Services.AddIdentity<User, Role>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -49,6 +55,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 //builder.Services.AddScoped<ISmsService, SmsService>();
 //builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<SeedData>();
 
 builder.Services.AddSwaggerGen();
 
@@ -66,5 +73,9 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+var scope = app.Services.CreateScope();
+var seedData = scope.ServiceProvider.GetService<SeedData>();
+await seedData.SeedRolesAndUsersAsync();
 
 app.Run();

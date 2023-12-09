@@ -1,6 +1,7 @@
 ﻿using DAL.Repository;
 using DAL.UnitOfWork;
 using Domain.Entities;
+using Services.Response;
 
 namespace Services.UserService
 {
@@ -15,13 +16,13 @@ namespace Services.UserService
             _userRepository = _unitOfWork.GetRepository<User>();
         }
 
-        public async Task<List<User>> GetAllUsersAsync()
+        public async Task<BaseResponse> GetAllUsersAsync()
         {
             var users = await _userRepository.GetAllAsync();
-            return users;
+            return new BaseResponse(true,"",users);
         }
 
-        public async Task<User> GetUserByIdAsync(int id)
+        public async Task<User> GetUserByIdAsync(string id)
         {
             return await _userRepository.GetByIdAsync(id);
         }
