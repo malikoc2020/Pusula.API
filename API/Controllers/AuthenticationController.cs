@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using Services.Request.AuthenticationRequest;
-using IAuthenticationService = Services.AuthenticationService.IAuthenticationService;
+using IAuthenticationService = Services.Services.AuthenticationService.IAuthenticationService;
 namespace API.Controllers
 {
     [Route("api/[controller]")]

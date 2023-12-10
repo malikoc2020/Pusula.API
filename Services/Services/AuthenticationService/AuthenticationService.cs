@@ -15,10 +15,9 @@ using Microsoft.Extensions.Configuration;
 using Services.DTO;
 using Newtonsoft.Json;
 
-
-namespace Services.AuthenticationService
+namespace Services.Services.AuthenticationService
 {
-    public class AuthenticationService: IAuthenticationService
+    public class AuthenticationService : IAuthenticationService
     {
         private readonly ILogger<AuthenticationService> _logger;
         private readonly IConfiguration _configuration;
@@ -46,7 +45,7 @@ namespace Services.AuthenticationService
                 //throw new Exception();//can not found
                 return new BaseResponse(false, "Lütfen kullanıcı adınızı kontrol edip tekrar deneyiniz.", null);
             }
-            else if(await _userManager.CheckPasswordAsync(user, loginRequest.Password))
+            else if (await _userManager.CheckPasswordAsync(user, loginRequest.Password))
             {
                 //var user = users.FirstOrDefault();
                 //var userPasswordGenerateDTO = new UserPasswordGenerateDTO(user.Name,user.SurName,user.Email,user.PhoneNumber);
@@ -57,25 +56,25 @@ namespace Services.AuthenticationService
 
                 //if (result == PasswordVerificationResult.Success)
                 //{
-                    var jwtToken = GenerateJwtToken(user);
-                    var userDTO = new UserDTO()
-                    {
-                        Id = user.Id,
-                        Name = user.Name,
-                        SurName = user.SurName,
-                        Email = user.Email,
-                        EmailConfirmed = user.EmailConfirmed,
-                        PhoneNumber = user.PhoneNumber,
-                        PhoneNumberConfirmed = user.PhoneNumberConfirmed,
-                        SecurityStamp = user.SecurityStamp,
-                        ConcurrencyStamp = user.ConcurrencyStamp,
-                        TwoFactorEnabled = user.TwoFactorEnabled,
-                        LockoutEnd = user.LockoutEnd,
-                        LockoutEnabled = user.LockoutEnabled,
-                        AccessFailedCount = user.AccessFailedCount,
-                        Token = jwtToken
-                    };
-                    return new BaseResponse(true,"", userDTO);
+                var jwtToken = GenerateJwtToken(user);
+                var userDTO = new UserDTO()
+                {
+                    Id = user.Id,
+                    Name = user.Name,
+                    SurName = user.SurName,
+                    Email = user.Email,
+                    EmailConfirmed = user.EmailConfirmed,
+                    PhoneNumber = user.PhoneNumber,
+                    PhoneNumberConfirmed = user.PhoneNumberConfirmed,
+                    SecurityStamp = user.SecurityStamp,
+                    ConcurrencyStamp = user.ConcurrencyStamp,
+                    TwoFactorEnabled = user.TwoFactorEnabled,
+                    LockoutEnd = user.LockoutEnd,
+                    LockoutEnabled = user.LockoutEnabled,
+                    AccessFailedCount = user.AccessFailedCount,
+                    Token = jwtToken
+                };
+                return new BaseResponse(true, "", userDTO);
                 //}
                 //else
                 //{

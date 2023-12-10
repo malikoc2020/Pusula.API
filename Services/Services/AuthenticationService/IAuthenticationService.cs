@@ -2,7 +2,7 @@
 using Services.Request.AuthenticationRequest;
 using Services.Response;
 
-namespace Services.AuthenticationService
+namespace Services.Services.AuthenticationService
 {
     public interface IAuthenticationService
     {

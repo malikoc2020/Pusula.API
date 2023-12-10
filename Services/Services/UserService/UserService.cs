@@ -3,7 +3,7 @@ using DAL.UnitOfWork;
 using Domain.Entities;
 using Services.Response;
 
-namespace Services.UserService
+namespace Services.Services.UserService
 {
     public class UserService : IUserService
     {
@@ -18,8 +18,9 @@ namespace Services.UserService
 
         public async Task<BaseResponse> GetAllUsersAsync()
         {
+            throw new DivideByZeroException();
             var users = await _userRepository.GetAllAsync();
-            return new BaseResponse(true,"",users);
+            return new BaseResponse(true, "", users);
         }
 
         public async Task<User> GetUserByIdAsync(string id)

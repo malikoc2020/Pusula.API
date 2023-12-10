@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using Services.Response;
 
-namespace Services.UserService
+namespace Services.Services.UserService
 {
     public interface IUserService
     {

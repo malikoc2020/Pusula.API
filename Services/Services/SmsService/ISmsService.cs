@@ -1,4 +1,4 @@
-﻿namespace Services.SmsService
+﻿namespace Services.Services.SmsService
 {
     public interface ISmsService
     {

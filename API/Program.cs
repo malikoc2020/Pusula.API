@@ -7,9 +7,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Services.AuthenticationService;
-using Services.SmsService;
-using Services.UserService;
+using Services.Middlewares;
+using Services.Services.AuthenticationService;
+using Services.Services.UserService;
+using Services.Services.SmsService;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -69,6 +70,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthorization();
 

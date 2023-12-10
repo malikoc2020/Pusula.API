@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Request.AuthenticationRequest;
 using Services.Response;
-using Services.UserService;
+using Services.Services.UserService;
 
 namespace API.Controllers
 {

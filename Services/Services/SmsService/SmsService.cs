@@ -1,16 +1,16 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Services.SmsService
+namespace Services.Services.SmsService
 {
 
-    public class SmsService: ISmsService
+    public class SmsService : ISmsService
     {
         private readonly ILogger<SmsService> _logger;
         private readonly HttpClient _httpClient;
         public SmsService(ILogger<SmsService> logger, IHttpClientFactory httpClientFactory)
         {
             _logger = logger;
-           _httpClient = httpClientFactory.CreateClient();
+            _httpClient = httpClientFactory.CreateClient();
         }
 
         public async Task<bool> SendSMS(string phoneNumber, string message)
@@ -26,7 +26,7 @@ namespace Services.SmsService
                 return true;
             }
 
-            return false; 
+            return false;
         }
     }
 }
