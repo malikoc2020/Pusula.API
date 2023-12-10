@@ -18,7 +18,6 @@ namespace Services.Services.UserService
 
         public async Task<BaseResponse> GetAllUsersAsync()
         {
-            throw new DivideByZeroException();
             var users = await _userRepository.GetAllAsync();
             return new BaseResponse(true, "", users);
         }
