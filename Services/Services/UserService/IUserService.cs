@@ -1,5 +1,7 @@
 ﻿using Domain.Entities;
+using Services.Request.UserRequest;
 using Services.Response;
+using Services.Response.UserResponse;
 
 namespace Services.Services.UserService
 {
@@ -10,5 +12,7 @@ namespace Services.Services.UserService
         Task<User> CreateUserAsync(User user);
         Task<User> UpdateUserAsync(User user);
         Task DeleteUserAsync(int id);
+        Task<VerifyResponse> SendVerifyCode(string phoneNumber);
+        Task<BaseResponse> VerifyPhone(VerifyRequest verifyRequest);
     }
 }

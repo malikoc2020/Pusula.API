@@ -2,13 +2,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Request.AuthenticationRequest;
+using Services.Request.UserRequest;
 using Services.Response;
 using Services.Services.UserService;
 
 namespace API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     [Authorize(AuthenticationSchemes = "Bearer")]
     public class UserController : ControllerBase
     {
@@ -35,29 +36,24 @@ namespace API.Controllers
             }
             return Ok(new BaseResponse(true,"",user));
         }
-
-        //[HttpPost]
-        //public async Task<ActionResult> CreateUser(User user)
-        //{
-        //    await _userService.CreateUserAsync(user);
-        //    return CreatedAtAction("GetUserById", new { id = user.Id }, user);
-        //}
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> UpdateUser(string id, User user)
-        //{
-        //    if (id != user.Id)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    await _userService.UpdateUserAsync(user);
-        //    return NoContent();
-        //}
-
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteUser(int id)
-        //{
-        //    await _userService.DeleteUserAsync(id);
-        //    return NoContent();
-        //}
+        [HttpGet("sendVerifyCode/{phoneNumber}")]
+        public async Task<ActionResult> SendVerifyCode(string phoneNumber)
+        {
+            var verifyCode = await _userService.SendVerifyCode(phoneNumber);
+            return Ok(new BaseResponse(true, "", verifyCode));
+        }
+        [HttpPost("verifyPhone")]
+        public async Task<IActionResult> VerifyPhone([FromBody] VerifyRequest verifyRequest)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _userService.VerifyPhone(verifyRequest);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
     }
 }

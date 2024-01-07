@@ -12,6 +12,7 @@ namespace DAL.Context
 
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<VerifyCode> VerifyCodes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,6 +25,10 @@ namespace DAL.Context
             modelBuilder.Entity<Role>(userRole =>
             {
                 userRole.ToTable("role");
+            });
+            modelBuilder.Entity<VerifyCode>(verifyCode =>
+            {
+                verifyCode.ToTable("verifyCode");
             });
         }
     }
