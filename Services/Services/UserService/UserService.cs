@@ -92,5 +92,28 @@ namespace Services.Services.UserService
             }
             return new BaseResponse(false, "Wrong Code", null);
         }
+        public async Task<BaseResponse> UpdateUserAsync(UserUpdateRequest userRequest)
+        {
+            var userProcess = await _userRepository.GetByIdAsync(userRequest.UserId);
+            if (userProcess is not null)
+            {
+                var user = await _userRepository.GetByIdAsync(userRequest.Id);
+                if (user is null)
+                {
+                    return new BaseResponse(false, "User could not found", null);
+                }
+                user.Name = userRequest.Name;
+                user.SurName = userRequest.SurName;
+                user.Email = userRequest.Email;
+                user.PhoneNumber = userRequest.PhoneNumber;
+                await _userRepository.UpdateAsync(user);
+                await _unitOfWork.CommitAsync();
+                return new BaseResponse(true, "", null);
+            }
+            else
+            {
+                return new BaseResponse(false, "Process User could not found", null);
+            }
+        }
     }
 }

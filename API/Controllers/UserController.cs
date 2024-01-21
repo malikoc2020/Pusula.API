@@ -20,13 +20,14 @@ namespace API.Controllers
             _logger = logger;
             _userService = userService;
         }
-        [HttpGet]
+
+        [HttpGet("GetAllUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
             return Ok(await _userService.GetAllUsersAsync());
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetUserById/{id}")]
         public async Task<ActionResult> GetUserById(string id)
         {
             var user = await _userService.GetUserByIdAsync(id);
@@ -48,6 +49,19 @@ namespace API.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _userService.VerifyPhone(verifyRequest);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+        [HttpPost("updateUser")]
+        public async Task<IActionResult> UpdateUser([FromBody] UserUpdateRequest request)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _userService.UpdateUserAsync(request);
                 return Ok(result);
             }
             else

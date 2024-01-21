@@ -14,5 +14,6 @@ namespace Services.Services.UserService
         Task DeleteUserAsync(int id);
         Task<VerifyResponse> SendVerifyCode(string phoneNumber);
         Task<BaseResponse> VerifyPhone(VerifyRequest verifyRequest);
+        Task<BaseResponse> UpdateUserAsync(UserUpdateRequest userRequest);
     }
 }
