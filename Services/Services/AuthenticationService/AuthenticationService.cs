@@ -14,6 +14,7 @@ using Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Services.DTO;
 using Newtonsoft.Json;
+using System.Data;
 
 namespace Services.Services.AuthenticationService
 {
@@ -72,8 +73,10 @@ namespace Services.Services.AuthenticationService
                     LockoutEnd = user.LockoutEnd,
                     LockoutEnabled = user.LockoutEnabled,
                     AccessFailedCount = user.AccessFailedCount,
-                    Token = jwtToken
+                    Token = jwtToken,
                 };
+                userDTO.UserRoles = (await _userManager.GetRolesAsync(user)).ToList();
+
                 return new BaseResponse(true, "", userDTO);
                 //}
                 //else

@@ -1,11 +1,14 @@
 ﻿using DAL.Repository;
 using DAL.UnitOfWork;
 using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using Services.DTO;
 using Services.Request.UserRequest;
 using Services.Response;
 using Services.Response.UserResponse;
+using System.Data;
 
 namespace Services.Services.UserService
 {
@@ -14,12 +17,17 @@ namespace Services.Services.UserService
         private readonly IRepository<User> _userRepository;
         private readonly IRepository<VerifyCode> _verifyCodeRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
 
-        public UserService(IUnitOfWork unitOfWork)
+
+        public UserService(IUnitOfWork unitOfWork, UserManager<User> userManager, RoleManager<Role> roleManager)
         {
             _unitOfWork = unitOfWork;
             _userRepository = _unitOfWork.GetRepository<User>();
             _verifyCodeRepository = _unitOfWork.GetRepository<VerifyCode>();
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public async Task<BaseResponse> GetAllUsersAsync()
@@ -28,12 +36,46 @@ namespace Services.Services.UserService
             return new BaseResponse(true, "", users);
         }
 
-        public async Task<User> GetUserByIdAsync(string id)
+        public async Task<UserDTO> GetUserByIdAsync(string id)
         {
-            return await _userRepository.GetByIdAsync(id);
+            var user =  await _userRepository.GetByIdAsync(id);
+            if (user is null)
+            {
+                return null;
+
+            }
+            var roles = await _userManager.GetRolesAsync(user);
+
+
+            var userDTO = new UserDTO()
+            {
+                Id = user.Id,
+                Name = user.Name,
+                SurName = user.SurName,
+                Email = user.Email,
+                EmailConfirmed = user.EmailConfirmed,
+                PhoneNumber = user.PhoneNumber,
+                PhoneNumberConfirmed = user.PhoneNumberConfirmed,
+                SecurityStamp = user.SecurityStamp,
+                ConcurrencyStamp = user.ConcurrencyStamp,
+                TwoFactorEnabled = user.TwoFactorEnabled,
+                LockoutEnd = user.LockoutEnd,
+                LockoutEnabled = user.LockoutEnabled,
+                AccessFailedCount = user.AccessFailedCount
+            };
+            userDTO.UserRoles = (await _userManager.GetRolesAsync(user)).ToList();
+            return userDTO;
+
+        }
+        public async Task<UserEditDTO> GetUserByIdForUserEdit(string id)
+        {
+            var res = new UserEditDTO();
+            res.User = await GetUserByIdAsync(id);
+            res.AllRoles = await _roleManager.Roles.Select(x=>x.Name).ToListAsync();
+            return res;
         }
 
-        public async Task<User> CreateUserAsync(User user)
+            public async Task<User> CreateUserAsync(User user)
         {
             await _userRepository.AddAsync(user);
             await _unitOfWork.CommitAsync();
@@ -108,6 +150,16 @@ namespace Services.Services.UserService
                 user.PhoneNumber = userRequest.PhoneNumber;
                 await _userRepository.UpdateAsync(user);
                 await _unitOfWork.CommitAsync();
+
+                // Update roles
+                var currentRoles = await _userManager.GetRolesAsync(user);
+                await _userManager.RemoveFromRolesAsync(user, currentRoles);
+
+                if (userRequest.UserRoles != null)
+                {
+                    await _userManager.AddToRolesAsync(user, userRequest.UserRoles);
+                }
+
                 return new BaseResponse(true, "", null);
             }
             else

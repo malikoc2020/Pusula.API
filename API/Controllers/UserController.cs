@@ -37,6 +37,16 @@ namespace API.Controllers
             }
             return Ok(new BaseResponse(true,"",user));
         }
+        [HttpGet("GetUserByIdForUserEdit/{id}")]
+        public async Task<ActionResult> GetUserByIdForUserEdit(string id)
+        {
+            var user = await _userService.GetUserByIdForUserEdit(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return Ok(new BaseResponse(true, "", user));
+        }
         [HttpGet("sendVerifyCode/{phoneNumber}")]
         public async Task<ActionResult> SendVerifyCode(string phoneNumber)
         {
