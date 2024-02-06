@@ -1,7 +1,5 @@
-﻿using Domain.Entities;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Services.Request.AuthenticationRequest;
 using Services.Request.UserRequest;
 using Services.Response;
 using Services.Services.UserService;

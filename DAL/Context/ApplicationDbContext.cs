@@ -1,6 +1,7 @@
 ﻿using Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Security;
 
 namespace DAL.Context
 {
@@ -13,6 +14,9 @@ namespace DAL.Context
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<VerifyCode> VerifyCodes { get; set; }
+        public DbSet<PermissionType> PermissionTypes { get; set; }
+        public DbSet<Permission> Permissions { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,6 +33,14 @@ namespace DAL.Context
             modelBuilder.Entity<VerifyCode>(verifyCode =>
             {
                 verifyCode.ToTable("verifyCode");
+            });
+            modelBuilder.Entity<PermissionType>(permissionType =>
+            {
+                permissionType.ToTable("permissionType");
+            });
+            modelBuilder.Entity<Permission>(permission =>
+            {
+                permission.ToTable("permission");
             });
         }
     }

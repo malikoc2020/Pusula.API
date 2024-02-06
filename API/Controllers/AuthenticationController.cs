@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
 using Services.Request.AuthenticationRequest;
 using IAuthenticationService = Services.Services.AuthenticationService.IAuthenticationService;
 namespace API.Controllers

@@ -19,9 +19,13 @@ namespace Domain.Entities
         //public DateTime? LockoutEnd { get; set; }
         //public bool? LockoutEnabled { get; set; } = false;
         //public int? AccessFailedCount { get; set; }
+        public DateTime? DateOfStart { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public int CreatedBy { get; set; } = 1;
         public DateTime UpdatedAt { get; set; }
         public int UpdatedBy { get; set; }
+
+        public virtual ICollection<Permission> Permissions { get; set; }
+
     }
 }
