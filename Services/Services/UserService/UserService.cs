@@ -60,7 +60,8 @@ namespace Services.Services.UserService
                 TwoFactorEnabled = user.TwoFactorEnabled,
                 LockoutEnd = user.LockoutEnd,
                 LockoutEnabled = user.LockoutEnabled,
-                AccessFailedCount = user.AccessFailedCount
+                AccessFailedCount = user.AccessFailedCount,
+                DateOfStart = user.DateOfStart
             };
             userDTO.UserRoles = (await _userManager.GetRolesAsync(user)).ToList();
             return userDTO;
@@ -147,6 +148,7 @@ namespace Services.Services.UserService
                 user.SurName = userRequest.SurName;
                 user.Email = userRequest.Email;
                 user.PhoneNumber = userRequest.PhoneNumber;
+                user.DateOfStart = userRequest.DateOfStart;
                 await _userRepository.UpdateAsync(user);
                 await _unitOfWork.CommitAsync();
 

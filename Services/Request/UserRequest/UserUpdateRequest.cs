@@ -15,5 +15,6 @@ namespace Services.Request.UserRequest
         public string PhoneNumber { get; set; } = "";
         public string UserId { get; set; } = "";
         public List<string> UserRoles { get; set; } = new List<string>();
+        public DateTime? DateOfStart { get; set; }
     }
 }

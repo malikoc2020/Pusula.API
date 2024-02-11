@@ -1,6 +1,7 @@
 ﻿using DAL.Repository;
 using DAL.UnitOfWork;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Services.DTO;
 using Services.Response;
 
@@ -9,6 +10,7 @@ namespace Services.Services.PermissionService
     public class PermissionService : IPermissionService
     {
         private readonly IRepository<Permission> _PermissionRepository;
+        private readonly IRepository<PermissionType> _PermissionTypeRepository;
         private readonly IUnitOfWork _unitOfWork;
 
 
@@ -16,11 +18,20 @@ namespace Services.Services.PermissionService
         {
             _unitOfWork = unitOfWork;
             _PermissionRepository = _unitOfWork.GetRepository<Permission>();
+            _PermissionTypeRepository = _unitOfWork.GetRepository<PermissionType>();
         }
 
         public async Task<BaseResponse> GetAllPermissionsAsync()
         {
-            var permissions = await _PermissionRepository.GetAllAsync();
+            var permissions = await _PermissionRepository.GetAllAsQueryable().Include(x=>x.User).Include(x=>x.PermissionType).Select(x=>new PermissionDTO() {
+            Id = x.Id,
+            PermissionTypeId = x.PermissionTypeId,
+            StartDate = x.StartDate,
+            EndDate = x.EndDate,
+            UserId  = x.UserId,
+            UserName = x.User.Name + " " + x.User.SurName,
+            PermissionTypeName = x.PermissionType.Name
+            }).ToListAsync();
             return new BaseResponse(true, "", permissions);
         }
 
@@ -80,6 +91,14 @@ namespace Services.Services.PermissionService
             }
             return new BaseResponse(false, "Permission Type Could Not Found", null);
         }
-
+        public async Task<BaseResponse> GetAllPermissionTypesAsync()
+        {
+            var permissions = await _PermissionTypeRepository.GetAllAsQueryable().Select(x => new PermissionTypeDTO()
+            {
+                Id = x.Id,
+                Name = x.Name
+            }).ToListAsync();
+            return new BaseResponse(true, "", permissions);
+        }
     }
 }

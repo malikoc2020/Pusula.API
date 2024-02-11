@@ -56,5 +56,10 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
         }
+        [HttpGet("GetAllPermissionTypes")]
+        public async Task<IActionResult> GetAllPermissionTypes()
+        {
+            return Ok(await _permissionService.GetAllPermissionTypesAsync());
+        }
     }
 }

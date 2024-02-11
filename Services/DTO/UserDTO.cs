@@ -21,5 +21,6 @@
         public int UpdatedBy { get; set; }
         public string Token { get; set; } = "";
         public List<string> UserRoles { get; set; } = new List<string>();
+        public DateTime? DateOfStart { get; set; }
     }
 }

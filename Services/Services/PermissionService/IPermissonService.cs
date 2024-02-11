@@ -11,5 +11,6 @@ namespace Services.Services.PermissionService
         Task<BaseResponse> CreatePermissionAsync(PermissionDTO request);
         Task<BaseResponse> UpdatePermissionAsync(PermissionDTO request);
         Task<BaseResponse> DeletePermissionAsync(int id);
+        Task<BaseResponse> GetAllPermissionTypesAsync();
     }
 }
