@@ -13,5 +13,7 @@ namespace Services.DTO
         public string ilceAd { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public string UserId { get; set; }
+
     }
 }
