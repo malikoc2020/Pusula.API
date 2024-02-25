@@ -15,6 +15,8 @@ using System.Text;
 using System.Security;
 using Services.Services.PermissionService;
 using Services.Services.PermissionTypeService;
+using Services.Services.CommonService;
+using Services.Services.WorksiteService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,6 +61,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IPermissionTypeService, PermissionTypeService>();
+builder.Services.AddScoped<IWorksiteService, WorksiteService>();
+builder.Services.AddScoped<ICommonService, CommonService>();
 //builder.Services.AddScoped<ISmsService, SmsService>();
 //builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<SeedData>();
