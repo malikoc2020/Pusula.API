@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using DAL.Migrations;
+using Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
@@ -19,6 +20,9 @@ namespace DAL.Context
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<il> ils { get; set; }
         public DbSet<ilce> ilces { get; set; }
+        public DbSet<Worksite> Worksites { get; set; }
+        public DbSet<WorksiteWorker> WorksiteWorkers { get; set; }
+        public DbSet<WorksiteWorkerType> WorksiteWorkerTypes { get; set; }
 
 
 
@@ -56,6 +60,18 @@ namespace DAL.Context
             modelBuilder.Entity<ilce>(ilce =>
             {
                 ilce.ToTable("ilce");
+            });
+            modelBuilder.Entity<Worksite>(worksites =>
+            {
+                worksites.ToTable("Worksites");
+            });
+            modelBuilder.Entity<WorksiteWorker>(worksiteWorker =>
+            {
+                worksiteWorker.ToTable("WorksiteWorker");
+            });
+            modelBuilder.Entity<WorksiteWorkerType>(worksiteWorkerType =>
+            {
+                worksiteWorkerType.ToTable("WorksiteWorkerType");
             });
         }
     }
