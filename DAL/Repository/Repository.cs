@@ -35,10 +35,19 @@ namespace DAL.Repository
         {
             await _dbSet.AddAsync(entity);
         }
+        public async Task AddRangeAsync(List<T> entities)
+        {
+            await _dbSet.AddRangeAsync(entities);
+        }
 
         public async Task UpdateAsync(T entity)
         {
             _dbSet.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+        public async Task UpdateRangeAsync(List<T> entities)
+        {
+            _dbSet.UpdateRange(entities);
             await _context.SaveChangesAsync();
         }
 

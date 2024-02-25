@@ -86,6 +86,6 @@ app.MapControllers();
 
 var scope = app.Services.CreateScope();
 var seedData = scope.ServiceProvider.GetService<SeedData>();
-await seedData.SeedRolesAndUsersAsync();
+await seedData.SeedAsync();
 
 app.Run();

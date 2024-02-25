@@ -1,6 +1,7 @@
 ﻿using Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using System.Security;
 
 namespace DAL.Context
@@ -16,6 +17,9 @@ namespace DAL.Context
         public DbSet<VerifyCode> VerifyCodes { get; set; }
         public DbSet<PermissionType> PermissionTypes { get; set; }
         public DbSet<Permission> Permissions { get; set; }
+        public DbSet<il> ils { get; set; }
+        public DbSet<ilce> ilces { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -41,6 +45,17 @@ namespace DAL.Context
             modelBuilder.Entity<Permission>(permission =>
             {
                 permission.ToTable("permission");
+            });
+            modelBuilder.Entity<il>(il =>
+            {
+                il.ToTable("il");
+                il.Property(e => e.Id)
+            .ValueGeneratedNever(); // This will disable auto-increment for the Id field
+
+            });
+            modelBuilder.Entity<ilce>(ilce =>
+            {
+                ilce.ToTable("ilce");
             });
         }
     }
