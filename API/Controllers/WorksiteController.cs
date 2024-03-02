@@ -61,5 +61,41 @@ namespace API.Controllers
         {
             return Ok(await _worksiteService.GetAllWorksiteWorkerTypesAsync());
         }
+        [HttpGet("GetWorksiteWorkersById/{id}")]
+        public async Task<ActionResult> GetWorksiteWorkersById(int id)
+        {
+            return Ok(await _worksiteService.GetWorksiteWorkersByIdAsync(id));
+        }
+        [HttpPost("InsertWorksiteWorker")]
+        public async Task<IActionResult> InsertWorksiteWorker([FromBody] WorksiteWorkerDTO request)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _worksiteService.CreateWorksiteWorkerAsync(request);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+        [HttpPost("UpdateWorksiteWorker")]
+        public async Task<IActionResult> UpdateWorksiteWorker([FromBody] WorksiteWorkerDTO request)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _worksiteService.UpdateWorksiteWorkerAsync(request);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+        [HttpDelete("DeleteWorksiteWorker/{id}")]
+        public async Task<ActionResult> DeleteWorksiteWorker(int id)
+        {
+            return Ok(await _worksiteService.DeleteWorksiteWorkerAsync(id));
+        }
     }
 }
