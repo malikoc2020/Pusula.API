@@ -14,6 +14,8 @@ namespace DAL.Seed
         private readonly IRepository<PermissionType> _PermissionTypeRepository;
         private readonly IRepository<il> _ilRepository;
         private readonly IRepository<ilce> _ilceRepository;
+        private readonly IRepository<WorksiteWorkerType> _WorksiteWorkerType;
+
 
 
         public SeedData(RoleManager<Role> roleManager, UserManager<User> userManager, IUnitOfWork unitOfWork)
@@ -24,12 +26,15 @@ namespace DAL.Seed
             _PermissionTypeRepository = _unitOfWork.GetRepository<PermissionType>();
             _ilRepository = _unitOfWork.GetRepository<il>();
             _ilceRepository = _unitOfWork.GetRepository<ilce>();
+            _WorksiteWorkerType = _unitOfWork.GetRepository<WorksiteWorkerType>();
+
         }
         public async Task SeedAsync()
         {
             await SeedRolesAndUsersAsync();
             await SeedPermissionsAsync();
             await SeedililceAsync();
+            await SeedWorksiteWorkerTypesAsync();
         }
         public async Task SeedRolesAndUsersAsync()
         {
@@ -1157,6 +1162,29 @@ namespace DAL.Seed
                             new ilce() {Id = 968, Name = "MERKEZ", ilId = 67}
                         };
                     await _ilceRepository.AddRangeAsync(ilces);
+                    await _unitOfWork.CommitAsync();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                // Log any exceptions that occur during the seeding process
+                Console.WriteLine(ex.Message);
+            }
+        }
+        public async Task SeedWorksiteWorkerTypesAsync()
+        {
+            try
+            {
+                if ((await _WorksiteWorkerType.GetAllAsync()).Count == 0)
+                {
+                    var worksiteWorkerType = new WorksiteWorkerType() { Name = "Worker",OvertimeWage = 15 };
+                    await _WorksiteWorkerType.AddAsync(worksiteWorkerType);
+
+                    var worksiteWorkerType2 = new WorksiteWorkerType() { Name = "Forman", OvertimeWage = 30 };
+                    await _WorksiteWorkerType.AddAsync(worksiteWorkerType2);
+
+
                     await _unitOfWork.CommitAsync();
                 }
 

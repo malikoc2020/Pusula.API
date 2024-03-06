@@ -118,7 +118,7 @@ namespace Services.Services.WorksiteService
                 StartDate = x.StartDate,
                 EndDate = x.EndDate,
                 UserName = x.User.Name + " " + x.User.UserName,
-                WorksiteWorkeTypeName = x.WorksiteWorkerType.Name
+                WorksiteWorkerTypeName = x.WorksiteWorkerType.Name
             }).OrderBy(x=>x.StartDate).ThenBy(x=>x.EndDate).ToListAsync();
             return new BaseResponse(true, "", worksiteWorkers);
 
