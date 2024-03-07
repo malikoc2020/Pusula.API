@@ -56,15 +56,20 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
         }
+        [HttpGet("GetWorksiteWorkerById/{id}")]
+        public async Task<ActionResult> GetWorksiteWorkerById(int id)
+        {
+            return Ok(await _worksiteService.GetWorksiteWorkerByIdAsync(id));
+        }
         [HttpGet("GetAllWorksiteWorkerTypes")]
         public async Task<IActionResult> GetAllWorksiteWorkerTypes()
         {
             return Ok(await _worksiteService.GetAllWorksiteWorkerTypesAsync());
         }
-        [HttpGet("GetWorksiteWorkersById/{id}")]
-        public async Task<ActionResult> GetWorksiteWorkersById(int id)
+        [HttpGet("GetWorksiteWorkersByWorksiteId/{id}")]
+        public async Task<ActionResult> GetWorksiteWorkersByWorksiteId(int id)
         {
-            return Ok(await _worksiteService.GetWorksiteWorkersByIdAsync(id));
+            return Ok(await _worksiteService.GetWorksiteWorkersByWorksiteId(id));
         }
         [HttpPost("InsertWorksiteWorker")]
         public async Task<IActionResult> InsertWorksiteWorker([FromBody] WorksiteWorkerDTO request)

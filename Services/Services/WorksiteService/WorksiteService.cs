@@ -108,13 +108,33 @@ namespace Services.Services.WorksiteService
             }).ToListAsync();
             return new BaseResponse(true, "", worksites);
         }
-        public async Task<BaseResponse> GetWorksiteWorkersByIdAsync(int id)
+        public async Task<BaseResponse> GetWorksiteWorkerByIdAsync(int id)
         {
-            var worksiteWorkers = await _WorksiteWorkerRepository.GetAllAsQueryable().Include(x => x.WorksiteWorkerType).Include(x => x.User).Where(x=>x.WorkersiteId == id).Select(x => new WorksiteWorkerDTO()
+            var entity = await _WorksiteWorkerRepository.GetByIdAsync(id);
+            if (entity is null)
+            {
+                return new BaseResponse(false, "Worksite Worker Could Not Found", null);
+            }
+
+            var entityDTO = new WorksiteWorkerDTO()
+            {
+                Id = entity.Id,
+                WorksiteId = entity.WorksiteId,
+                WorksiteWorkerTypeId = entity.WorksiteWorkerTypeId,
+                UserId = entity.UserId,
+                StartDate = entity.StartDate,
+                EndDate = entity.EndDate
+            };
+            return new BaseResponse(true, "", entityDTO);
+
+        }
+        public async Task<BaseResponse> GetWorksiteWorkersByWorksiteId(int id)
+        {
+            var worksiteWorkers = await _WorksiteWorkerRepository.GetAllAsQueryable().Include(x => x.WorksiteWorkerType).Include(x => x.User).Where(x=>x.WorksiteId == id).Select(x => new WorksiteWorkerDTO()
             {
                 Id = x.Id,
                 UserId = x.UserId,
-                WorkersiteId = x.WorkersiteId,
+                WorksiteId = x.WorksiteId,
                 StartDate = x.StartDate,
                 EndDate = x.EndDate,
                 UserName = x.User.Name + " " + x.User.UserName,
@@ -125,7 +145,7 @@ namespace Services.Services.WorksiteService
         }
         public async Task<BaseResponse> CreateWorksiteWorkerAsync(WorksiteWorkerDTO request)
         {
-            var worksiteWorker = new WorksiteWorker() { WorkersiteId = request.WorkersiteId, WorksiteWorkerTypeId = request.WorksiteWorkerTypeId, UserId = request.UserId, StartDate = request.StartDate, EndDate = request.EndDate };
+            var worksiteWorker = new WorksiteWorker() { WorksiteId = request.WorksiteId, WorksiteWorkerTypeId = request.WorksiteWorkerTypeId, UserId = request.UserId, StartDate = request.StartDate, EndDate = request.EndDate };
             await _WorksiteWorkerRepository.AddAsync(worksiteWorker);
             await _unitOfWork.CommitAsync();
             return new BaseResponse(true, "", new WorksiteWorkerDTO() { Id = worksiteWorker.Id, UserId = worksiteWorker.UserId, WorksiteWorkerTypeId = worksiteWorker.WorksiteWorkerTypeId, StartDate = worksiteWorker.StartDate, EndDate = worksiteWorker.EndDate });
@@ -140,14 +160,14 @@ namespace Services.Services.WorksiteService
 
             }
             entity.UserId = request.UserId;
-            entity.WorkersiteId = request.WorkersiteId;
+            entity.WorksiteId = request.WorksiteId;
             entity.WorksiteWorkerTypeId = request.WorksiteWorkerTypeId;
             entity.StartDate = request.StartDate;
             entity.EndDate = request.EndDate;
 
             await _WorksiteWorkerRepository.UpdateAsync(entity);
             await _unitOfWork.CommitAsync();
-            return new BaseResponse(true, "", new WorksiteWorkerDTO() { Id = entity.Id, UserId = entity.UserId, WorkersiteId = entity.WorkersiteId, WorksiteWorkerTypeId = entity.WorksiteWorkerTypeId, StartDate = entity.StartDate, EndDate = entity.EndDate });
+            return new BaseResponse(true, "", new WorksiteWorkerDTO() { Id = entity.Id, UserId = entity.UserId, WorksiteId = entity.WorksiteId, WorksiteWorkerTypeId = entity.WorksiteWorkerTypeId, StartDate = entity.StartDate, EndDate = entity.EndDate });
         }
 
         public async Task<BaseResponse> DeleteWorksiteWorkerAsync(int id)

@@ -4,7 +4,7 @@ namespace Domain.Entities
 {
     public class WorksiteWorker:BaseEntity
     {
-        public int WorkersiteId { get; set; }
+        public int WorksiteId { get; set; }
         public string UserId { get; set; }
         public int WorksiteWorkerTypeId { get; set; }
         public DateTime StartDate { get; set; }
