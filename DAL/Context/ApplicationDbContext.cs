@@ -23,7 +23,8 @@ namespace DAL.Context
         public DbSet<Worksite> Worksites { get; set; }
         public DbSet<WorksiteWorker> WorksiteWorkers { get; set; }
         public DbSet<WorksiteWorkerType> WorksiteWorkerTypes { get; set; }
-
+        public DbSet<WorksiteAction> WorksiteActions { get; set; }
+        public DbSet<WorksiteActionType> WorksiteActionTypes { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -72,6 +73,16 @@ namespace DAL.Context
             modelBuilder.Entity<WorksiteWorkerType>(worksiteWorkerType =>
             {
                 worksiteWorkerType.ToTable("WorksiteWorkerType");
+            });
+            modelBuilder.Entity<WorksiteAction>(worksiteAction =>
+            {
+                worksiteAction.ToTable("WorksiteAction");
+            });
+            modelBuilder.Entity<WorksiteActionType>(worksiteActionType =>
+            {
+                worksiteActionType.ToTable("WorksiteActionType");
+                worksiteActionType.Property(e => e.Id)
+            .ValueGeneratedNever(); // This will disable auto-increment for the Id field
             });
         }
     }

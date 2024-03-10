@@ -12,6 +12,8 @@ namespace Services.Services.WorksiteService
         private readonly IRepository<Worksite> _WorksiteRepository;
         private readonly IRepository<WorksiteWorkerType> _WorksiteWorkerTypeRepository;
         private readonly IRepository<WorksiteWorker> _WorksiteWorkerRepository;
+        private readonly IRepository<WorksiteActionType> _WorksiteActionTypeRepository;
+        private readonly IRepository<WorksiteAction> _WorksiteActionRepository;
         private readonly IUnitOfWork _unitOfWork;
 
 
@@ -21,6 +23,8 @@ namespace Services.Services.WorksiteService
             _WorksiteRepository = _unitOfWork.GetRepository<Worksite>();
             _WorksiteWorkerTypeRepository = _unitOfWork.GetRepository<WorksiteWorkerType>();
             _WorksiteWorkerRepository = _unitOfWork.GetRepository<WorksiteWorker>();
+            _WorksiteActionTypeRepository = _unitOfWork.GetRepository<WorksiteActionType>();
+            _WorksiteActionRepository = _unitOfWork.GetRepository<WorksiteAction>();
         }
 
         public async Task<BaseResponse> GetAllWorksitesAsync()
@@ -99,6 +103,9 @@ namespace Services.Services.WorksiteService
             }
             return new BaseResponse(false, "Worksite Type Could Not Found", null);
         }
+
+        #region WorksiteWorker
+
         public async Task<BaseResponse> GetAllWorksiteWorkerTypesAsync()
         {
             var worksites = await _WorksiteWorkerTypeRepository.GetAllAsQueryable().Select(x => new WorksiteWorkerTypeDTO()
@@ -181,5 +188,97 @@ namespace Services.Services.WorksiteService
             }
             return new BaseResponse(false, "Worksite Worker Could Not Found", null);
         }
+
+        #endregion
+
+
+
+
+
+
+        #region WorksiteAction
+
+        public async Task<BaseResponse> GetAllWorksiteActionTypesAsync()
+        {
+            var worksites = await _WorksiteActionTypeRepository.GetAllAsQueryable().Select(x => new WorksiteActionTypeDTO()
+            {
+                Id = x.Id,
+                Name = x.Name
+            }).ToListAsync();
+            return new BaseResponse(true, "", worksites);
+        }
+        public async Task<BaseResponse> GetWorksiteActionByIdAsync(int id)
+        {
+            var entity = await _WorksiteActionRepository.GetByIdAsync(id);
+            if (entity is null)
+            {
+                return new BaseResponse(false, "Worksite Action Could Not Found", null);
+            }
+
+            var entityDTO = new WorksiteActionDTO()
+            {
+                Id = entity.Id,
+                WorksiteId = entity.WorksiteId,
+                WorksiteActionTypeId = entity.WorksiteActionTypeId,
+                Date = entity.Date,
+                Value = entity.Value
+
+            };
+            return new BaseResponse(true, "", entityDTO);
+
+        }
+        public async Task<BaseResponse> GetWorksiteActionsByWorksiteId(int id)
+        {
+            var worksiteActions = await _WorksiteActionRepository.GetAllAsQueryable().Include(x => x.WorksiteActionType).Where(x => x.WorksiteId == id).Select(x => new WorksiteActionDTO()
+            {
+                Id = x.Id,
+                WorksiteId = x.WorksiteId,
+                Date = x.Date,
+                Value = x.Value,
+                WorksiteActionTypeId = x.WorksiteActionTypeId,
+                WorksiteActionTypeName = x.WorksiteActionType.Name
+            }).OrderBy(x => x.Date).ThenBy(x => x.WorksiteActionTypeId).ToListAsync();
+            return new BaseResponse(true, "", worksiteActions);
+
+        }
+        public async Task<BaseResponse> CreateWorksiteActionAsync(WorksiteActionDTO request)
+        {
+            var worksiteAction = new WorksiteAction() { WorksiteId = request.WorksiteId, WorksiteActionTypeId = request.WorksiteActionTypeId, Date = request.Date, Value = request.Value };
+            await _WorksiteActionRepository.AddAsync(worksiteAction);
+            await _unitOfWork.CommitAsync();
+            return new BaseResponse(true, "", new WorksiteActionDTO() { Id = worksiteAction.Id, WorksiteActionTypeId = worksiteAction.WorksiteActionTypeId, Date = worksiteAction.Date, Value = worksiteAction.Value });
+        }
+
+        public async Task<BaseResponse> UpdateWorksiteActionAsync(WorksiteActionDTO request)
+        {
+            var entity = await _WorksiteActionRepository.GetByIdAsync(request.Id);
+            if (entity is null)
+            {
+                return new BaseResponse(false, "WorksiteAction not found!", null);
+
+            }
+            entity.WorksiteId = request.WorksiteId;
+            entity.WorksiteActionTypeId = request.WorksiteActionTypeId;
+            entity.Date = request.Date;
+            entity.Value = request.Value;
+
+
+            await _WorksiteActionRepository.UpdateAsync(entity);
+            await _unitOfWork.CommitAsync();
+            return new BaseResponse(true, "", new WorksiteActionDTO() { Id = entity.Id, WorksiteId = entity.WorksiteId, WorksiteActionTypeId = entity.WorksiteActionTypeId, Date = entity.Date, Value = entity.Value });
+        }
+
+        public async Task<BaseResponse> DeleteWorksiteActionAsync(int id)
+        {
+            var entity = await _WorksiteActionRepository.GetByIdAsync(id);
+            if (entity is not null)
+            {
+                await _WorksiteActionRepository.DeleteAsync(entity);
+                await _unitOfWork.CommitAsync();
+                return new BaseResponse(true, "", null);
+            }
+            return new BaseResponse(false, "Worksite Action Could Not Found", null);
+        }
+        #endregion
     }
 }

@@ -15,6 +15,7 @@ namespace DAL.Seed
         private readonly IRepository<il> _ilRepository;
         private readonly IRepository<ilce> _ilceRepository;
         private readonly IRepository<WorksiteWorkerType> _WorksiteWorkerType;
+        private readonly IRepository<WorksiteActionType> _WorksiteActionType;
 
 
 
@@ -27,7 +28,7 @@ namespace DAL.Seed
             _ilRepository = _unitOfWork.GetRepository<il>();
             _ilceRepository = _unitOfWork.GetRepository<ilce>();
             _WorksiteWorkerType = _unitOfWork.GetRepository<WorksiteWorkerType>();
-
+            _WorksiteActionType = _unitOfWork.GetRepository<WorksiteActionType>();
         }
         public async Task SeedAsync()
         {
@@ -35,6 +36,7 @@ namespace DAL.Seed
             await SeedPermissionsAsync();
             await SeedililceAsync();
             await SeedWorksiteWorkerTypesAsync();
+            await SeedWorksiteActionTypesAsync();
         }
         public async Task SeedRolesAndUsersAsync()
         {
@@ -1183,6 +1185,29 @@ namespace DAL.Seed
 
                     var worksiteWorkerType2 = new WorksiteWorkerType() { Name = "Forman", OvertimeWage = 30 };
                     await _WorksiteWorkerType.AddAsync(worksiteWorkerType2);
+
+
+                    await _unitOfWork.CommitAsync();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                // Log any exceptions that occur during the seeding process
+                Console.WriteLine(ex.Message);
+            }
+        }
+        public async Task SeedWorksiteActionTypesAsync()
+        {
+            try
+            {
+                if ((await _WorksiteActionType.GetAllAsync()).Count == 0)
+                {
+                    var worksiteActionType = new WorksiteActionType() { Id = 1, Name = "Excavation Process" };
+                    await _WorksiteActionType.AddAsync(worksiteActionType);
+
+                    var worksiteActionType2 = new WorksiteActionType() { Id = 2, Name = "Other" };
+                    await _WorksiteActionType.AddAsync(worksiteActionType2);
 
 
                     await _unitOfWork.CommitAsync();

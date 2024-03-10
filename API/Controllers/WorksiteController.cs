@@ -57,6 +57,7 @@ namespace API.Controllers
             }
         }
         [HttpGet("GetWorksiteWorkerById/{id}")]
+        #region WorksiteWorker
         public async Task<ActionResult> GetWorksiteWorkerById(int id)
         {
             return Ok(await _worksiteService.GetWorksiteWorkerByIdAsync(id));
@@ -102,5 +103,55 @@ namespace API.Controllers
         {
             return Ok(await _worksiteService.DeleteWorksiteWorkerAsync(id));
         }
+        #endregion
+
+        #region WorksiteAction
+        [HttpGet("GetWorksiteActionById/{id}")]
+        public async Task<ActionResult> GetWorksiteActionById(int id)
+        {
+            return Ok(await _worksiteService.GetWorksiteActionByIdAsync(id));
+        }
+        [HttpGet("GetAllWorksiteActionTypes")]
+        public async Task<IActionResult> GetAllWorksiteActionTypes()
+        {
+            return Ok(await _worksiteService.GetAllWorksiteActionTypesAsync());
+        }
+        [HttpGet("GetWorksiteActionsByWorksiteId/{id}")]
+        public async Task<ActionResult> GetWorksiteActionsByWorksiteId(int id)
+        {
+            return Ok(await _worksiteService.GetWorksiteActionsByWorksiteId(id));
+        }
+        [HttpPost("InsertWorksiteAction")]
+        public async Task<IActionResult> InsertWorksiteAction([FromBody] WorksiteActionDTO request)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _worksiteService.CreateWorksiteActionAsync(request);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+        [HttpPost("UpdateWorksiteAction")]
+        public async Task<IActionResult> UpdateWorksiteAction([FromBody] WorksiteActionDTO request)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _worksiteService.UpdateWorksiteActionAsync(request);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+        [HttpDelete("DeleteWorksiteAction/{id}")]
+        public async Task<ActionResult> DeleteWorksiteAction(int id)
+        {
+            return Ok(await _worksiteService.DeleteWorksiteActionAsync(id));
+        }
+        #endregion
     }
 }

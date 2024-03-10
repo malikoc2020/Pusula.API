@@ -17,5 +17,11 @@ namespace Services.Services.WorksiteService
         Task<BaseResponse> CreateWorksiteWorkerAsync(WorksiteWorkerDTO request);
         Task<BaseResponse> UpdateWorksiteWorkerAsync(WorksiteWorkerDTO request);
         Task<BaseResponse> DeleteWorksiteWorkerAsync(int id);
+        Task<BaseResponse> GetAllWorksiteActionTypesAsync();
+        Task<BaseResponse> GetWorksiteActionByIdAsync(int id);
+        Task<BaseResponse> GetWorksiteActionsByWorksiteId(int id);
+        Task<BaseResponse> CreateWorksiteActionAsync(WorksiteActionDTO request);
+        Task<BaseResponse> UpdateWorksiteActionAsync(WorksiteActionDTO request);
+        Task<BaseResponse> DeleteWorksiteActionAsync(int id);
     }
 }
