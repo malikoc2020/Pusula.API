@@ -31,7 +31,38 @@ namespace Services.Services.UserService
 
         public async Task<BaseResponse> GetAllUsersAsync()
         {
-            var users = await _userRepository.GetAllAsync();
+            //var users = await _userRepository.GetAllAsync();
+            var users = await _userRepository.GetAllAsQueryable().Include(x=>x.Permissions).Select(x=>new UserDTO() { 
+            Id = x.Id,
+            Name = x.Name,
+            SurName = x.SurName,
+            AccessFailedCount = x.AccessFailedCount,    
+            ConcurrencyStamp = x.ConcurrencyStamp,
+            CreatedAt = x.CreatedAt,
+            CreatedBy = x.CreatedBy,    
+            DateOfStart = x.DateOfStart,
+            Email = x.Email,
+            EmailConfirmed = x.EmailConfirmed,
+            LockoutEnabled = x.LockoutEnabled,
+            LockoutEnd = x.LockoutEnd,
+            PhoneNumber = x.PhoneNumber,
+            PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+            Salary = x.Salary,
+            SecurityStamp = x.SecurityStamp,
+            TwoFactorEnabled = x.TwoFactorEnabled,
+            UpdatedAt = x.UpdatedAt,
+            UpdatedBy = x.UpdatedBy,
+            permissions = x.Permissions.Select(y=>new PermissionDTO() { 
+                                                                        Id = y.Id,
+                                                                        EndDate = y.EndDate,
+                                                                        PermissionTypeId = y.PermissionTypeId,
+                                                                        StartDate = y.StartDate,
+                                                                        UserId = y.UserId
+
+            
+                                                                        }).ToList()
+            }).ToListAsync();
+
             return new BaseResponse(true, "", users);
         }
 
@@ -53,7 +84,7 @@ namespace Services.Services.UserService
                 SurName = user.SurName,
                 Email = user.Email,
                 EmailConfirmed = user.EmailConfirmed,
-                PhoneNumber = user.PhoneNumber,
+                PhoneNumber = user.PhoneNumber??"",
                 PhoneNumberConfirmed = user.PhoneNumberConfirmed,
                 SecurityStamp = user.SecurityStamp,
                 ConcurrencyStamp = user.ConcurrencyStamp,
@@ -61,7 +92,8 @@ namespace Services.Services.UserService
                 LockoutEnd = user.LockoutEnd,
                 LockoutEnabled = user.LockoutEnabled,
                 AccessFailedCount = user.AccessFailedCount,
-                DateOfStart = user.DateOfStart
+                DateOfStart = user.DateOfStart,
+                Salary = user.Salary
             };
             userDTO.UserRoles = (await _userManager.GetRolesAsync(user)).ToList();
             return userDTO;
@@ -149,6 +181,7 @@ namespace Services.Services.UserService
                 user.Email = userRequest.Email;
                 user.PhoneNumber = userRequest.PhoneNumber;
                 user.DateOfStart = userRequest.DateOfStart;
+                user.Salary = userRequest.Salary;
                 await _userRepository.UpdateAsync(user);
                 await _unitOfWork.CommitAsync();
 

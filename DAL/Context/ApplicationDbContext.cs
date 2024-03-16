@@ -31,9 +31,10 @@ namespace DAL.Context
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<User>(userRole =>
+            modelBuilder.Entity<User>(user =>
             {
-                userRole.ToTable("user");
+                user.ToTable("user");
+                user.Property(u => u.Salary).HasDefaultValue(0);
             });
             modelBuilder.Entity<Role>(userRole =>
             {

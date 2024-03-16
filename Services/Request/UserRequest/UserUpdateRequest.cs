@@ -16,5 +16,6 @@ namespace Services.Request.UserRequest
         public string UserId { get; set; } = "";
         public List<string> UserRoles { get; set; } = new List<string>();
         public DateTime? DateOfStart { get; set; }
+        public decimal Salary { get; set; }
     }
 }

@@ -119,7 +119,8 @@ namespace Services.Services.AuthenticationService
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
                 CreatedBy = 1,
-                UpdatedBy = 1
+                UpdatedBy = 1,
+                Salary = 0
             };
 
             try

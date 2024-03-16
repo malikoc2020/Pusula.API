@@ -24,6 +24,7 @@ namespace Domain.Entities
         public int CreatedBy { get; set; } = 1;
         public DateTime UpdatedAt { get; set; }
         public int UpdatedBy { get; set; }
+        public decimal Salary { get; set; }
 
         public virtual ICollection<Permission> Permissions { get; set; }
 
