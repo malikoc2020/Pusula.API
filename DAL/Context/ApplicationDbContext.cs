@@ -25,6 +25,11 @@ namespace DAL.Context
         public DbSet<WorksiteWorkerType> WorksiteWorkerTypes { get; set; }
         public DbSet<WorksiteAction> WorksiteActions { get; set; }
         public DbSet<WorksiteActionType> WorksiteActionTypes { get; set; }
+        public DbSet<Year> Years { get; set; }
+        public DbSet<Month> Months { get; set; }
+        public DbSet<Payroll> Payrolls { get; set; }
+        public DbSet<PayrollTemp> PayrollTemps { get; set; }
+        public DbSet<PayrollSetting> PayrollSettings { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -84,6 +89,32 @@ namespace DAL.Context
                 worksiteActionType.ToTable("WorksiteActionType");
                 worksiteActionType.Property(e => e.Id)
             .ValueGeneratedNever(); // This will disable auto-increment for the Id field
+            });
+            modelBuilder.Entity<Year>(year =>
+            {
+                year.ToTable("Year");
+                year.Property(e => e.Id)
+            .ValueGeneratedNever(); // This will disable auto-increment for the Id field
+
+            });
+            modelBuilder.Entity<Month>(month =>
+            {
+                month.ToTable("Month");
+                month.Property(e => e.Id)
+            .ValueGeneratedNever(); // This will disable auto-increment for the Id field
+
+            });
+            modelBuilder.Entity<Payroll>(payroll =>
+            {
+                payroll.ToTable("Payroll");
+            });
+            modelBuilder.Entity<PayrollTemp>(payrollTemp =>
+            {
+                payrollTemp.ToTable("PayrollTemp");
+            });
+            modelBuilder.Entity<PayrollSetting>(payrollSetting =>
+            {
+                payrollSetting.ToTable("PayrollSetting");
             });
         }
     }

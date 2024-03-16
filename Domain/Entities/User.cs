@@ -27,6 +27,8 @@ namespace Domain.Entities
         public decimal Salary { get; set; }
 
         public virtual ICollection<Permission> Permissions { get; set; }
+        public virtual ICollection<Payroll> Payrolls { get; set; }
+        public virtual ICollection<PayrollTemp> PayrollTemps { get; set; }
 
     }
 }

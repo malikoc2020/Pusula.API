@@ -14,8 +14,10 @@ namespace DAL.Seed
         private readonly IRepository<PermissionType> _PermissionTypeRepository;
         private readonly IRepository<il> _ilRepository;
         private readonly IRepository<ilce> _ilceRepository;
-        private readonly IRepository<WorksiteWorkerType> _WorksiteWorkerType;
-        private readonly IRepository<WorksiteActionType> _WorksiteActionType;
+        private readonly IRepository<WorksiteWorkerType> _WorksiteWorkerTypeRepository;
+        private readonly IRepository<WorksiteActionType> _WorksiteActionTypeRepository;
+        private readonly IRepository<Year> _YearRepository;
+        private readonly IRepository<Month> _MonthRepository;
 
 
 
@@ -27,8 +29,10 @@ namespace DAL.Seed
             _PermissionTypeRepository = _unitOfWork.GetRepository<PermissionType>();
             _ilRepository = _unitOfWork.GetRepository<il>();
             _ilceRepository = _unitOfWork.GetRepository<ilce>();
-            _WorksiteWorkerType = _unitOfWork.GetRepository<WorksiteWorkerType>();
-            _WorksiteActionType = _unitOfWork.GetRepository<WorksiteActionType>();
+            _WorksiteWorkerTypeRepository = _unitOfWork.GetRepository<WorksiteWorkerType>();
+            _WorksiteActionTypeRepository = _unitOfWork.GetRepository<WorksiteActionType>();
+            _YearRepository = _unitOfWork.GetRepository<Year>();
+            _MonthRepository = _unitOfWork.GetRepository<Month>();
         }
         public async Task SeedAsync()
         {
@@ -37,6 +41,7 @@ namespace DAL.Seed
             await SeedililceAsync();
             await SeedWorksiteWorkerTypesAsync();
             await SeedWorksiteActionTypesAsync();
+            await SeedYearMonthAsync();
         }
         public async Task SeedRolesAndUsersAsync()
         {
@@ -1178,13 +1183,13 @@ namespace DAL.Seed
         {
             try
             {
-                if ((await _WorksiteWorkerType.GetAllAsync()).Count == 0)
+                if ((await _WorksiteWorkerTypeRepository.GetAllAsync()).Count == 0)
                 {
                     var worksiteWorkerType = new WorksiteWorkerType() { Name = "Worker",OvertimeWage = 15 };
-                    await _WorksiteWorkerType.AddAsync(worksiteWorkerType);
+                    await _WorksiteWorkerTypeRepository.AddAsync(worksiteWorkerType);
 
                     var worksiteWorkerType2 = new WorksiteWorkerType() { Name = "Forman", OvertimeWage = 30 };
-                    await _WorksiteWorkerType.AddAsync(worksiteWorkerType2);
+                    await _WorksiteWorkerTypeRepository.AddAsync(worksiteWorkerType2);
 
 
                     await _unitOfWork.CommitAsync();
@@ -1201,18 +1206,64 @@ namespace DAL.Seed
         {
             try
             {
-                if ((await _WorksiteActionType.GetAllAsync()).Count == 0)
+                if ((await _WorksiteActionTypeRepository.GetAllAsync()).Count == 0)
                 {
                     var worksiteActionType = new WorksiteActionType() { Id = 1, Name = "Excavation Process" };
-                    await _WorksiteActionType.AddAsync(worksiteActionType);
+                    await _WorksiteActionTypeRepository.AddAsync(worksiteActionType);
 
                     var worksiteActionType2 = new WorksiteActionType() { Id = 2, Name = "Other" };
-                    await _WorksiteActionType.AddAsync(worksiteActionType2);
+                    await _WorksiteActionTypeRepository.AddAsync(worksiteActionType2);
 
 
                     await _unitOfWork.CommitAsync();
                 }
 
+            }
+            catch (Exception ex)
+            {
+                // Log any exceptions that occur during the seeding process
+                Console.WriteLine(ex.Message);
+            }
+        }
+        public async Task SeedYearMonthAsync()
+        {
+            try
+            {
+                if ((await _YearRepository.GetAllAsync()).Count == 0)
+                {
+                    for (int i = 2020; i <= 2050; i++)
+                    {
+                        var year = new Year() { Id = i };
+                        await _YearRepository.AddAsync(year);
+                    }  
+                    await _unitOfWork.CommitAsync();
+                }
+                if ((await _YearRepository.GetAllAsync()).Count == 0)
+                {
+                    for (int i = 1; i <= 12; i++)
+                    {
+                        var month1 = new Month() { Id = i,
+                            Name = i switch
+                            {
+                                1 => "January",
+                                2 => "February",
+                                3 => "March",
+                                4 => "April",
+                                5 => "May",
+                                6 => "June",
+                                7 => "July",
+                                8 => "August",
+                                9 => "September",
+                                10 => "October",
+                                11 => "November",
+                                12 => "December",
+                                _ => "Unknown" // default case if i is not in the range 1-12
+                            }
+                        };
+                        await _MonthRepository.AddAsync(month1);
+                    }
+                    await _unitOfWork.CommitAsync();
+                }
             }
             catch (Exception ex)
             {
