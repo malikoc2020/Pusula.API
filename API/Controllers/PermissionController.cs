@@ -61,5 +61,10 @@ namespace API.Controllers
         {
             return Ok(await _permissionService.GetAllPermissionTypesAsync());
         }
+        [HttpDelete("DeletePermission/{id}")]
+        public async Task<ActionResult> DeletePermission(int id)
+        {
+            return Ok(await _permissionService.DeletePermissionAsync(id));
+        }
     }
 }
