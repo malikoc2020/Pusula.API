@@ -1,5 +1,4 @@
-﻿using Domain.Base;
-namespace Domain.Entities
+﻿namespace Domain.Entities
 {
     public class PayrollTempDTO
     {
