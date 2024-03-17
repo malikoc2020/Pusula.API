@@ -11,6 +11,8 @@ namespace Services.Services.CommonService
     {
         private readonly IRepository<il> _ilRepository;
         private readonly IRepository<ilce> _ilceRepository;
+        private readonly IRepository<Year> _YearRepository;
+        private readonly IRepository<Month> _MonthRepository;
         private readonly IUnitOfWork _unitOfWork;
 
 
@@ -19,6 +21,9 @@ namespace Services.Services.CommonService
             _unitOfWork = unitOfWork;
             _ilRepository = _unitOfWork.GetRepository<il>();
             _ilceRepository = _unitOfWork.GetRepository<ilce>();
+            _YearRepository = _unitOfWork.GetRepository<Year>();
+            _MonthRepository = _unitOfWork.GetRepository<Month>();
+
         }
 
         public async Task<BaseResponse> GetAllProvinces()
@@ -39,6 +44,23 @@ namespace Services.Services.CommonService
                 ilId = x.ilId,
             }).ToListAsync();
             return new BaseResponse(true, "", worksites);
+        }
+        public async Task<BaseResponse> GetAllYears()
+        {
+            var entities = await _YearRepository.GetAllAsQueryable().Select(x => new YearDTO()
+            {
+                Id = x.Id
+            }).ToListAsync();
+            return new BaseResponse(true, "", entities);
+        }
+        public async Task<BaseResponse> GetAllMonths()
+        {
+            var entities = await _MonthRepository.GetAllAsQueryable().Select(x => new MonthDTO()
+            {
+                Id = x.Id,
+                Name = x.Name
+            }).ToListAsync();
+            return new BaseResponse(true, "", entities);
         }
     }
 }

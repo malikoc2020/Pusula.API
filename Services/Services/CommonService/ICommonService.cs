@@ -6,5 +6,7 @@ namespace Services.Services.CommonService
     {
         Task<BaseResponse> GetAllProvinces();
         Task<BaseResponse> GetAllDistricts();
+        Task<BaseResponse> GetAllYears();
+        Task<BaseResponse> GetAllMonths();
     }
 }

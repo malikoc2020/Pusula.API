@@ -27,5 +27,15 @@ namespace API.Controllers
         {
             return Ok(await _commonService.GetAllDistricts());
         }
+        [HttpGet("GetAllYears")]
+        public async Task<IActionResult> GetAllYears()
+        {
+            return Ok(await _commonService.GetAllYears());
+        }
+        [HttpGet("GetAllMonths")]
+        public async Task<IActionResult> GetAllMonths()
+        {
+            return Ok(await _commonService.GetAllMonths());
+        }
     }
 }
