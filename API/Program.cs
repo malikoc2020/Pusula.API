@@ -17,6 +17,7 @@ using Services.Services.PermissionService;
 using Services.Services.PermissionTypeService;
 using Services.Services.CommonService;
 using Services.Services.WorksiteService;
+using Services.Services.PayrollService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -65,6 +66,7 @@ builder.Services.AddScoped<IWorksiteService, WorksiteService>();
 builder.Services.AddScoped<ICommonService, CommonService>();
 //builder.Services.AddScoped<ISmsService, SmsService>();
 //builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IPayrollService, PayrollService>();
 builder.Services.AddScoped<SeedData>();
 
 builder.Services.AddSwaggerGen();
