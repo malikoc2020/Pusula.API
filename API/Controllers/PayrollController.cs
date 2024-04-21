@@ -1,6 +1,7 @@
 ﻿using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Services.DTO;
 using Services.Services.PayrollService;
 
 namespace API.Controllers
@@ -65,9 +66,9 @@ namespace API.Controllers
 
 
         [HttpGet("GetAllPayrolls")]
-        public async Task<IActionResult> GetAllPayrolls()
+        public async Task<IActionResult> GetAllPayrolls([FromQuery]PayrollFilterDTO request)
         {
-            return Ok(await _payrollService.GetAllPayrollsAsync());
+            return Ok(await _payrollService.GetAllPayrollsAsync(request));
         }
         [HttpGet("GetPayrollById/{id}")]
         public async Task<ActionResult> GetPayrollById(int id)
@@ -108,9 +109,9 @@ namespace API.Controllers
 
 
         [HttpGet("GetAllPayrollTemps")]
-        public async Task<IActionResult> GetAllPayrollTemps()
+        public async Task<IActionResult> GetAllPayrollTemps([FromQuery] PayrollTempFilterDTO request)
         {
-            return Ok(await _payrollService.GetAllPayrollTempsAsync());
+            return Ok(await _payrollService.GetAllPayrollTempsAsync(request));
         }
         [HttpGet("GetPayrollTempById/{id}")]
         public async Task<ActionResult> GetPayrollTempById(int id)

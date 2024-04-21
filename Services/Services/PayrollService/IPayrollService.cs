@@ -12,13 +12,13 @@ namespace Services.Services.PayrollService
         Task<BaseResponse> UpdatePayrollSettingAsync(PayrollSettingDTO request);
         Task<BaseResponse> DeletePayrollSettingAsync(int id);
 
-        Task<BaseResponse> GetAllPayrollsAsync();
+        Task<BaseResponse> GetAllPayrollsAsync(PayrollFilterDTO request);
         Task<BaseResponse> GetPayrollByIdAsync(int id);
         Task<BaseResponse> CreatePayrollAsync(PayrollDTO request);
         Task<BaseResponse> UpdatePayrollAsync(PayrollDTO request);
         Task<BaseResponse> DeletePayrollAsync(int id);
 
-        Task<BaseResponse> GetAllPayrollTempsAsync();
+        Task<BaseResponse> GetAllPayrollTempsAsync(PayrollTempFilterDTO request);
         Task<BaseResponse> GetPayrollTempByIdAsync(int id);
         Task<BaseResponse> CreatePayrollTempAsync(PayrollTempDTO request);
         Task<BaseResponse> UpdatePayrollTempAsync(PayrollTempDTO request);

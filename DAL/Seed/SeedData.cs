@@ -1238,7 +1238,7 @@ namespace DAL.Seed
                     }  
                     await _unitOfWork.CommitAsync();
                 }
-                if ((await _YearRepository.GetAllAsync()).Count == 0)
+                if ((await _MonthRepository.GetAllAsync()).Count == 0)
                 {
                     for (int i = 1; i <= 12; i++)
                     {

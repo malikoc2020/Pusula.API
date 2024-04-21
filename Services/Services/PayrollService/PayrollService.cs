@@ -106,9 +106,13 @@ namespace Services.Services.PayrollService
             return new BaseResponse(false, "PayrollSetting Type Could Not Found", null);
         }
 
-        public async Task<BaseResponse> GetAllPayrollsAsync()
+        public async Task<BaseResponse> GetAllPayrollsAsync(PayrollFilterDTO request)
         {
-            var entities = await _PayrollRepository.GetAllAsQueryable().Include(x=>x.User).Include(x=>x.Month).Select(x=>new PayrollDTO() {
+            var entities = await _PayrollRepository
+                .GetAllAsQueryable()
+                .Where(x=>(request.YearId==null || x.YearId==request.YearId) && (request.MonthId == null || x.MonthId == request.MonthId) && (request.UserId == null || x.UserId == request.UserId))
+                .Include(x=>x.User).Include(x=>x.Month)
+                .Select(x=>new PayrollDTO() {
             Id = x.Id,
             UserId  = x.UserId,
             UserName = x.User.Name + " " + x.User.SurName,
@@ -199,9 +203,12 @@ namespace Services.Services.PayrollService
             return new BaseResponse(false, "Payroll Type Could Not Found", null);
         }
 
-        public async Task<BaseResponse> GetAllPayrollTempsAsync()
+        public async Task<BaseResponse> GetAllPayrollTempsAsync(PayrollTempFilterDTO request)
         {
-            var entities = await _PayrollTempRepository.GetAllAsQueryable().Include(x => x.User).Include(x => x.Month).Select(x => new PayrollTempDTO()
+            var entities = await _PayrollTempRepository.GetAllAsQueryable()
+                .Where(x => (request.YearId == null || x.YearId == request.YearId) && (request.MonthId == null || x.MonthId == request.MonthId) && (request.UserId == null || x.UserId == request.UserId))
+                .Include(x => x.User).Include(x => x.Month)
+                .Select(x => new PayrollTempDTO()
             {
                 Id = x.Id,
                 UserId = x.UserId,
