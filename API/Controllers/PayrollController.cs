@@ -149,5 +149,33 @@ namespace API.Controllers
         {
             return Ok(await _payrollService.DeletePayrollTempAsync(id));
         }
+
+
+        [HttpPost("Transfer")]
+        public async Task<IActionResult> Transfer([FromBody] PayrollTransferDTO request)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _payrollService.Transfer(request);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+        [HttpPost("Refresh")]
+        public async Task<IActionResult> Refresh([FromBody] PayrollRefreshDTO request)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _payrollService.Refresh(request);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
     }
 }
