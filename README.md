@@ -78,7 +78,7 @@ The project follows a layered architecture:
 - Worksite management (workers, actions, types)
 - Permission / leave tracking system
 - Province & district reference data
-- Role management is implemented using ASP.NET Identity (Admin/User roles defined and assigned)
+- Role-based authorization (Admin/User)
 - Centralized exception handling with custom error codes
 - Database seeding on application startup
 
@@ -117,11 +117,22 @@ The project follows a layered architecture:
 
 ## 🚀 How to Run
 
+1. Clone the repository
+
 ```bash
 git clone https://github.com/your-repo/pusula-api.git
+```
 
-dotnet restore
+2. Configure the connection string in `appsettings.Development.json`.
 
-dotnet ef database update
+3. Apply migrations via Package Manager Console:
 
-dotnet run
+```powershell
+Update-Database
+```
+
+4. Build and run the project.
+
+## Status
+
+Personal backend API project developed for practicing enterprise-level ASP.NET Core Web API architecture and authentication systems.
