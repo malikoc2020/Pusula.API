@@ -120,7 +120,7 @@ The project follows a layered architecture:
 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-repo/pusula-api.git
+git clone https://github.com/malikoc2020/Pusula.API.git
 ```
 
 2. Configure the connection string in `appsettings.Development.json`.
