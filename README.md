@@ -52,7 +52,7 @@ The project follows a layered architecture:
 
 ## 🧱 Tech Stack
 
-- ASP.NET Core Web API  
+- ASP.NET Core Web API  (.NET 7) 
 - Entity Framework Core  
 - MySQL  
 - ASP.NET Identity  
